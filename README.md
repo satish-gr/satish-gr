@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @satish-gr
-- Project repository is for phdata project challange 
+- Project repository  for phdata project challange 
 
 <!---
 Project repository is for phdata project challange, which consist of script for  databrick script and  snowflake for below reports

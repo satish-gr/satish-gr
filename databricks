@@ -1,0 +1,15 @@
+%scala
+//Read data
+
+val df1 = spark.read.format("csv").option("header",true).option("sep",",").load("/FileStore/tables/airports.csv")
+val df2 = spark.read.format("csv").option("header",true).option("sep",",").load("/FileStore/tables/airlines-3.csv")
+val df3 = spark.read.format("delta").option("header",true).option("sep",",").load("/FileStore/tables/partition_*.csv")
+
+//
+
+%scala
+ df1.write.format("delta").save("/FileStore/tables/airports/")
+ df2.write.format("delta").save("/FileStore/tables/airlines/")
+ df3.write.format("delta").save("/FileStore/tables/partition/")
+ 
+ 

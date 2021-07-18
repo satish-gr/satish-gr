@@ -1,0 +1,21 @@
+%sql
+
+--- Cancellation reasons by airport
+with  Cancellation_reasons as (
+ select origin_airport, 
+ CASE 
+   WHEN LOWER(CANCELLATION_REASON) = 'a' then  "Airline/Carrier"
+   when lower(CANCELLATION_REASON) = 'b' then "Wheather"
+   when lower(CANCELLATION_REASON) = 'c' then "National Air System"
+   when lower(CANCELLATION_REASON) = 'd' then "Securty"
+ else "no reason code"
+ end as  cancellation_reason,
+ count(*) as total_cnt from default.l1_flights
+ where cancelled <> 0
+ group by origin_airport, CANCELLATION_REASON 
+ )
+ 
+ select a.airport, cancellation_reason, total_cnt
+ from default.airports a
+ join Cancellation_reasons cr on
+ a.iata_code = cr.origin_airport

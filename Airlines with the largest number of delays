@@ -1,0 +1,9 @@
+%sql
+--Airlines with the largest number of delays 
+SELECT airline,
+       Count(*) AS delay_cnt
+FROM   default.l1_flights
+WHERE  departure_delay > 0
+        OR arrival_delay > 0
+GROUP  BY airline
+ORDER  BY delay_cnt DESC 

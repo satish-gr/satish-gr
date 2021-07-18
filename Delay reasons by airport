@@ -1,0 +1,21 @@
+%sql
+
+----Delay reasons by airport
+
+with delayed_flight as (
+
+  select destination_airport as airport,
+   case 
+      when  airline_delay <> 'null' then 'airline_delay'
+      when air_system_delay <> 'null' then 'air_system_delay'
+      when security_delay <> 'null' then 'security_delay'
+      when late_aircraft_delay <> 'null' then 'late_aircraft_delay'
+      when weather_delay <> 'null' then 'weather_delay'
+   end  as reason
+      from default.l1_flights
+  )
+  
+  select airport, count(*), reason
+  from delayed_flight
+  where reason <>'null'
+  group by airport, reason

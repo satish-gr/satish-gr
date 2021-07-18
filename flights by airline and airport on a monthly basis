@@ -1,0 +1,47 @@
+%sql
+-- Total number of flights by airline  and airport on a monthly basis.
+WITH flight_count_origin
+     AS (SELECT f.airline,
+                f.origin_airport AS airport,
+                f.month,
+                Count(*)         AS counts
+         FROM   default.l1_flights f
+                JOIN default.airlines al
+                  ON al.iata_code = f.airline
+         WHERE  f.cancelled = 0
+         GROUP  BY f.airline,
+                   f.origin_airport,
+                   f.month),
+                   
+     flight_count_destination
+     AS (SELECT f.airline,
+                f.destination_airport AS airport,
+                f.month,
+                Count(*)              AS counts
+         FROM   default.l1_flights f
+                JOIN default.airlines al
+                  ON al.iata_code = f.airline
+         WHERE  f.cancelled = 0
+         GROUP  BY f.airline,
+                   f.destination_airport,
+                   f.month)
+SELECT airline,
+       airport,
+       month,
+       Sum(counts) as total_no_flights
+FROM   (SELECT airline,
+               airport,
+               month,
+               counts
+        FROM   flight_count_origin
+        UNION
+        SELECT airline,
+               airport,
+               month,
+               counts
+        FROM   flight_count_destination) AS temp
+GROUP  BY airline,
+          airport,
+          month
+ORDER  BY airline,
+          month 

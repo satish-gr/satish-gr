@@ -1,0 +1,23 @@
+%sql
+--Airline with the most unique routes
+WITH routes
+     AS (SELECT airline,
+                origin_airport,
+                destination_airport,
+                Count(*) AS cnt
+         FROM   default.l1_flights
+         GROUP  BY airline,
+                   origin_airport,
+                   destination_airport
+         ORDER  BY airline,
+                   cnt)
+SELECT airline,
+       origin_airport,
+       destination_airport,
+       Max(cnt) AS cnt
+FROM   routes
+WHERE  cnt = (SELECT Max(cnt)
+              FROM   routes)
+GROUP  BY airline,
+          origin_airport,
+          destination_airport 
